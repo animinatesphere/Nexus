@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Trophy, Target, Zap, DollarSign, Lock, Gamepad2, Skull, Map } from 'lucide-react'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight, Trophy, Target, Zap, DollarSign, Lock, Gamepad2, Skull, Map, ChevronDown, CheckCircle, Users, Shield, Sparkles } from 'lucide-react'
 import { useAudio } from '../hooks/useAudio'
 
 // GTA Style Assets - Reliable High-Quality URLs
@@ -25,6 +25,11 @@ export default function Landing() {
   const [currentBg, setCurrentBg] = useState(0)
   const [loading, setLoading] = useState(true)
   const { playClick, playHover, playIntro } = useAudio()
+
+  // Parallax Scroll Effect
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 500], [0, 150])
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0])
 
   // Cycle Backgrounds
   useEffect(() => {
@@ -92,7 +97,10 @@ export default function Landing() {
       </nav>
 
       {/* Hero Content */}
-      <main className="relative z-10 flex flex-col items-start justify-center min-h-screen px-6 md:px-20 lg:px-32 pb-20 pt-32">
+      <motion.main 
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative z-10 flex flex-col items-start justify-center min-h-screen px-6 md:px-20 lg:px-32 pb-20 pt-32"
+      >
         <motion.div
            initial={{ x: -100, opacity: 0 }}
            animate={{ x: 0, opacity: 1 }}
@@ -150,7 +158,7 @@ export default function Landing() {
               </div>
            </div>
         </motion.div>
-      </main>
+      </motion.main>
 
       {/* Features "Heist Board" Section */}
       <section className="relative z-10 bg-zinc-900 py-24 px-6 md:px-20 border-t-8 border-yellow-400">
@@ -304,6 +312,99 @@ export default function Landing() {
                 />
              </div>
          </div>
+      </section>
+
+      {/* NEW: Pricing Teaser */}
+      <section className="relative z-10 bg-black py-24 px-6">
+          <div className="max-w-6xl mx-auto">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-['Anton'] text-5xl md:text-7xl text-white mb-4 text-center uppercase tracking-tighter"
+              >
+                  Choose Your Clearance
+              </motion.h2>
+              <p className="text-center text-zinc-500 font-mono text-sm uppercase tracking-widest mb-16">Simple. Transparent. No Hidden Fees.</p>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                  {/* Free Tier */}
+                  <motion.div 
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="border-2 border-zinc-800 bg-zinc-900/50 p-8 relative group hover:border-zinc-600 transition-all"
+                  >
+                      <div className="absolute top-4 right-4 bg-zinc-800 text-zinc-500 px-3 py-1 text-xs font-black uppercase">Starter</div>
+                      <h3 className="font-['Anton'] text-4xl text-white uppercase mb-2">Free</h3>
+                      <p className="text-zinc-400 font-mono text-sm mb-8">For solo operatives testing the waters</p>
+                      <div className="space-y-4 mb-8">
+                          <Feature text="5 Active Schemes (Projects)" />
+                          <Feature text="Unlimited Contracts (Tasks)" />
+                          <Feature text="Basic Finance Tracking" />
+                          <Feature text="Standard Encryption" />
+                      </div>
+                      <Link to="/login" className="block w-full bg-white text-black text-center font-['Anton'] uppercase py-3 hover:bg-yellow-400 transition-colors">
+                          Start Free
+                      </Link>
+                  </motion.div>
+
+                  {/* Premium Tier */}
+                  <motion.div 
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="border-2 border-yellow-400 bg-gradient-to-br from-yellow-400/10 to-black p-8 relative group shadow-[0_0_50px_rgba(250,204,21,0.3)]"
+                  >
+                      <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 text-xs font-black uppercase animate-pulse">Premium</div>
+                      <h3 className="font-['Anton'] text-4xl text-yellow-400 uppercase mb-2">$9.99/mo</h3>
+                      <p className="text-zinc-300 font-mono text-sm mb-8">For serious operators building empires</p>
+                      <div className="space-y-4 mb-8">
+                          <Feature text="Unlimited Schemes" highlighted />
+                          <Feature text="Advanced Analytics & Reports" highlighted />
+                          <Feature text="The Vault (Secure Storage)" highlighted />
+                          <Feature text="Priority Support" highlighted />
+                          <Feature text="Multi-Currency Support" highlighted />
+                      </div>
+                      <Link to="/upgrade" className="block w-full bg-yellow-400 text-black text-center font-['Anton'] uppercase py-3 hover:bg-white transition-all hover:scale-105">
+                          Upgrade Now
+                      </Link>
+                  </motion.div>
+              </div>
+          </div>
+      </section>
+
+      {/* NEW: FAQ Section */}
+      <section className="relative z-10 bg-zinc-900 py-24 px-6 border-t-8 border-zinc-800">
+          <div className="max-w-4xl mx-auto">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-['Anton'] text-5xl md:text-7xl text-white mb-16 text-center uppercase tracking-tighter"
+              >
+                  Intel Briefing
+              </motion.h2>
+
+              <div className="space-y-4">
+                  <FAQItem 
+                    question="Is my data secure?" 
+                    answer="Absolutely. We use military-grade encryption and store all data in secure, geo-redundant servers. Your intel is locked down tighter than Fort Knox."
+                  />
+                  <FAQItem 
+                    question="Can I switch between Free and Premium?" 
+                    answer="Yes. Upgrade or downgrade anytime. No contracts, no commitments. You're in control of your clearance level."
+                  />
+                  <FAQItem 
+                    question="What payment methods do you accept?" 
+                    answer="We accept all major credit cards via Stripe, and local payments through BudPay for Nigerian operatives. Multi-currency support included."
+                  />
+                  <FAQItem 
+                    question="Do you offer team/enterprise plans?" 
+                    answer="Not yet, but we're planning crew-based operations for Q2 2026. Join the waitlist to get early access when we launch."
+                  />
+              </div>
+          </div>
       </section>
 
       {/* CTA Footer */}
@@ -515,3 +616,52 @@ function FeatureCard({ img, title, desc, icon: Icon, delay }) {
         </motion.div>
     )
 }
+
+function Feature({ text, highlighted }) {
+    return (
+        <div className="flex items-center gap-3">
+            <CheckCircle className={`h-5 w-5 ${highlighted ? 'text-yellow-400' : 'text-zinc-600'}`} />
+            <span className={`text-sm font-mono ${highlighted ? 'text-white' : 'text-zinc-400'}`}>{text}</span>
+        </div>
+    )
+}
+
+function FAQItem({ question, answer }) {
+    const [isOpen, setIsOpen] = useState(false)
+    
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="border-b border-zinc-800"
+        >
+            <button 
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between py-6 text-left group hover:text-yellow-400 transition-colors"
+            >
+                <h3 className="font-['Anton'] text-xl md:text-2xl text-white uppercase group-hover:text-yellow-400 transition-colors">{question}</h3>
+                <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <ChevronDown className="h-6 w-6 text-yellow-400" />
+                </motion.div>
+            </button>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                    >
+                        <p className="pb-6 text-zinc-400 leading-relaxed">{answer}</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
+    )
+}
+
