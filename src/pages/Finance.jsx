@@ -1,16 +1,18 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, DollarSign, TrendingUp, TrendingDown, Lock, Download } from 'lucide-react'
+import { Plus, DollarSign, TrendingUp, TrendingDown, Lock, Download, Globe } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { useAudio } from '../hooks/useAudio'
+import { useSubscription } from '../hooks/useSubscription'
 
 export default function Finance() {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { playClick, playHover, playSuccess } = useAudio()
+  const { currency, updateCurrency } = useSubscription()
   
   // Form State
   const [amount, setAmount] = useState('')
@@ -78,6 +80,20 @@ export default function Finance() {
 
   const COLORS = ['#10b981', '#ef4444']
 
+  const CURRENCIES = {
+    USD: { symbol: '$', label: 'USD' },
+    NGN: { symbol: '₦', label: 'NGN' },
+    EUR: { symbol: '€', label: 'EUR' },
+    GBP: { symbol: '£', label: 'GBP' },
+    GHS: { symbol: 'GH₵', label: 'GHS' },
+    KES: { symbol: 'KSh', label: 'KES' }
+  }
+
+  const formatCurrency = (val) => {
+    const symbol = CURRENCIES[currency]?.symbol || '$'
+    return `${symbol}${val.toFixed(2)}`
+  }
+
   return (
 
     <div className="space-y-8 pb-10">
@@ -89,6 +105,18 @@ export default function Finance() {
           <p className="mt-2 text-zinc-500 font-mono text-xs uppercase tracking-widest">
             Money Laundering // Stash Management
           </p>
+          <div className="mt-4 flex items-center gap-2 bg-black border border-zinc-800 p-1">
+            <Globe className="h-4 w-4 text-zinc-600 ml-2" />
+            <select 
+              value={currency}
+              onChange={(e) => { playClick(); updateCurrency(e.target.value) }}
+              className="bg-transparent text-zinc-400 text-xs font-mono uppercase px-2 py-1 focus:outline-none border-none cursor-pointer hover:text-white"
+            >
+              {Object.keys(CURRENCIES).map(curr => (
+                <option key={curr} value={curr} className="bg-zinc-900">{CURRENCIES[curr].label}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -106,7 +134,7 @@ export default function Finance() {
              <DollarSign className="h-12 w-12 opacity-20" />
           </div>
           <p className="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1">Total Stash (Net)</p>
-          <h3 className="text-4xl font-['Anton'] text-white tracking-wide">${balance.toFixed(2)}</h3>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide">{formatCurrency(balance)}</h3>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-none border-2 border-zinc-700 bg-black p-6 relative">
@@ -114,7 +142,7 @@ export default function Finance() {
              <TrendingUp className="h-12 w-12 opacity-20" />
           </div>
           <p className="text-xs font-bold text-green-500 uppercase tracking-widest mb-1">Laundered (Income)</p>
-          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-green-500">+${income.toFixed(2)}</h3>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-green-500">+{formatCurrency(income)}</h3>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-none border-2 border-zinc-700 bg-black p-6 relative">
@@ -122,7 +150,7 @@ export default function Finance() {
              <TrendingDown className="h-12 w-12 opacity-20" />
           </div>
           <p className="text-xs font-bold text-red-500 uppercase tracking-widest mb-1">Bribes / Costs (Expense)</p>
-          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-red-500">-${expense.toFixed(2)}</h3>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-red-500">-{formatCurrency(expense)}</h3>
         </motion.div>
       </div>
 
@@ -215,7 +243,7 @@ export default function Finance() {
                 </div>
                 <div className="text-right">
                   <p className={`font-mono font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
-                    {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
+                    {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                   </p>
                   <p className="text-xs text-zinc-600 font-mono uppercase">{new Date(t.date).toLocaleDateString()}</p>
                 </div>
@@ -252,7 +280,7 @@ export default function Finance() {
               <div>
                 <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Amount</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-mono">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-mono">{CURRENCIES[currency]?.symbol || '$'}</span>
                   <input
                     type="number"
                     step="0.01"

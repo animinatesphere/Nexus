@@ -2,7 +2,7 @@
 import React from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Calendar, Tag } from 'lucide-react'
+import { Calendar, Tag, Clock } from 'lucide-react'
 
 export default function KanbanCard({ task, isOverlay }) {
   const {

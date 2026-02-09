@@ -38,10 +38,16 @@ const PLANS = [
 ]
 
 export default function Upgrade() {
-  const { tier, isPremium } = useSubscription()
+  const { tier, isPremium, currency: preferredCurrency, updateCurrency } = useSubscription()
   const { playClick, playSuccess, playHover } = useAudio()
   const [loading, setLoading] = useState(false)
-  const [currency, setCurrency] = useState(CURRENCIES[0])
+  const [currency, setCurrency] = useState(CURRENCIES.find(c => c.code === preferredCurrency) || CURRENCIES[0])
+
+  // Sync with preferred currency from DB
+  useEffect(() => {
+    const matched = CURRENCIES.find(c => c.code === preferredCurrency)
+    if (matched) setCurrency(matched)
+  }, [preferredCurrency])
 
   // Load BudPay Inline Script
   useEffect(() => {
@@ -126,7 +132,7 @@ export default function Upgrade() {
                 {CURRENCIES.map(curr => (
                     <button
                         key={curr.code}
-                        onClick={() => { playClick(); setCurrency(curr) }}
+                        onClick={() => { playClick(); updateCurrency(curr.code) }}
                         onMouseEnter={playHover}
                         className={`px-4 py-2 font-mono text-xs uppercase transition-all flex items-center gap-2 ${currency.code === curr.code ? 'bg-yellow-400 text-black font-black' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
                     >

@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { motion } from 'framer-motion'
 import { useSubscription } from '../hooks/useSubscription'
 import { toast } from 'sonner'
+import { useAudio } from '../hooks/useAudio'
 
 export default function Projects() {
   const [projects, setProjects] = useState([])
@@ -22,7 +23,30 @@ export default function Projects() {
   }, [])
 
   const fetchProjects = async () => {
-    // ... rest of fetchProjects
+    try {
+      setLoading(true)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        setLoading(false)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setProjects(data || [])
+    } catch (error) {
+      console.error('Error fetching projects:', error.message)
+      toast.error("INTEL RETRIEVAL FAILED", {
+        description: "Communication with HQ lost. Reconnecting..."
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCreateProject = async (e) => {
