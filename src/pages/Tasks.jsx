@@ -122,23 +122,28 @@ export default function Tasks() {
 
   return (
     <div className="space-y-6 h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between shrink-0">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between shrink-0 border-b-2 border-zinc-800 pb-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[var(--foreground)]">Tasks</h1>
-          <p className="mt-1 text-sm md:text-base text-[var(--muted-foreground)]">Manage your daily todos</p>
+          <h1 className="font-['Anton'] text-4xl text-white uppercase tracking-wider drop-shadow-[2px_2px_0px_#000]">
+            Mission List
+          </h1>
+          <p className="mt-1 text-zinc-500 font-mono text-xs uppercase tracking-widest">
+            Current Objectives // Active Contracts
+          </p>
         </div>
         <div className="flex items-center gap-3">
              {/* View Toggle */}
-            <div className="flex items-center rounded-lg border border-[var(--border)] bg-[var(--card)] p-1">
+            <div className="flex items-center border-2 border-zinc-800 bg-black p-1">
                 <button 
                     onClick={() => setView('list')}
-                    className={`rounded p-1.5 transition-colors ${view === 'list' ? 'bg-[var(--primary)] text-white' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
+                    className={`p-2 transition-all ${view === 'list' ? 'bg-yellow-400 text-black' : 'text-zinc-600 hover:text-white'}`}
                 >
                     <List className="h-4 w-4" />
                 </button>
+                <div className="w-px h-4 bg-zinc-800 mx-1" />
                 <button 
                     onClick={() => setView('board')}
-                    className={`rounded p-1.5 transition-colors ${view === 'board' ? 'bg-[var(--primary)] text-white' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
+                    className={`p-2 transition-all ${view === 'board' ? 'bg-yellow-400 text-black' : 'text-zinc-600 hover:text-white'}`}
                 >
                     <LayoutGrid className="h-4 w-4" />
                 </button>
@@ -146,27 +151,28 @@ export default function Tasks() {
 
             <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 rounded-md bg-[var(--primary)] px-4 py-2 font-medium text-[var(--primary-foreground)] hover:opacity-90 whitespace-nowrap"
+            className="flex items-center gap-2 bg-yellow-400 text-black px-4 py-2 font-['Anton'] uppercase tracking-wider hover:bg-white transition-colors border-2 border-black shadow-[2px_2px_0px_#000]"
             >
             <Plus className="h-4 w-4" />
-            New Task
+            Add Contract
             </button>
         </div>
       </div>
 
       {view === 'list' && (
-        <div className="flex gap-2 border-b border-[var(--border)] pb-4 shrink-0 overflow-x-auto custom-scrollbar">
+        <div className="flex gap-2 border-b-2 border-zinc-800 pb-4 shrink-0 overflow-x-auto custom-scrollbar">
             {['all', 'todo', 'in_progress', 'done'].map((f) => (
             <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                className={`px-4 py-1 font-bold text-xs uppercase tracking-widest transition-all clip-path-slant ${
                 filter === f 
-                    ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' 
-                    : 'bg-[var(--accent)] text-[var(--muted-foreground)] hover:bg-[var(--border)]'
+                    ? 'bg-white text-black' 
+                    : 'bg-zinc-900 text-zinc-500 hover:text-white hover:bg-zinc-800'
                 }`}
+                style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
             >
-                {f.replace('_', ' ').charAt(0).toUpperCase() + f.replace('_', ' ').slice(1)}
+                {f.replace('_', ' ').toUpperCase()}
             </button>
             ))}
         </div>
@@ -183,39 +189,39 @@ export default function Tasks() {
 
       {view === 'list' && (
       loading ? (
-        <div className="flex h-32 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--primary)] border-t-transparent"></div>
+        <div className="space-y-4">
+             {[1,2,3].map(i => <div key={i} className="h-16 bg-zinc-900 animate-pulse border-b border-zinc-800" />)}
         </div>
       ) : filteredTasks.length === 0 ? (
-        <div className="flex h-64 flex-col items-center justify-center rounded-lg border border-dashed border-[var(--border)] text-center">
-          <CheckCircle2 className="h-12 w-12 text-[var(--muted-foreground)] opacity-50" />
-          <h3 className="mt-4 text-lg font-medium text-[var(--foreground)]">No tasks found</h3>
-          <p className="mt-1 text-[var(--muted-foreground)]">Create a new task to get started</p>
+        <div className="flex h-64 flex-col items-center justify-center border-2 border-dashed border-zinc-800 bg-zinc-900/20 text-center">
+          <AlertCircle className="h-12 w-12 text-zinc-700 mb-4" />
+          <h3 className="font-['Anton'] text-2xl text-zinc-500 uppercase">No Active Contracts</h3>
+          <p className="mt-1 text-zinc-600 font-mono text-xs uppercase">Your schedule is clear. Enjoy the R&R.</p>
         </div>
       ) : (
-        <div className="space-y-3 overflow-y-auto custom-scrollbar pb-20 md:pb-0">
+        <div className="space-y-2 overflow-y-auto custom-scrollbar pb-20 md:pb-0 pr-2">
           {filteredTasks.map((task) => (
-            <div key={task.id} className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:shadow-sm">
+            <div key={task.id} className="group flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-l-4 border-zinc-800 bg-zinc-900/50 p-4 transition-all hover:bg-zinc-900 hover:border-yellow-400 hover:pl-5">
               <div className="flex items-center gap-4">
                 <button 
                   onClick={() => handleStatusChange(task.id, task.status === 'done' ? 'todo' : 'done')}
-                  className={`shrink-0 h-5 w-5 rounded-full border-2 transition-colors ${
+                  className={`shrink-0 h-6 w-6 border-2 transition-all flex items-center justify-center ${
                     task.status === 'done' 
-                      ? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--primary-foreground)]' 
-                      : 'border-[var(--muted-foreground)] hover:border-[var(--primary)]'
+                      ? 'border-green-500 bg-green-500/20 text-green-500' 
+                      : 'border-zinc-600 hover:border-yellow-400 text-transparent hover:text-yellow-400'
                   }`}
                 >
-                  {task.status === 'done' && <CheckCircle2 className="h-4 w-4" />}
+                  <CheckCircle2 className="h-4 w-4" />
                 </button>
                 
                 <div className="min-w-0 flex-1">
-                  <h3 className={`truncate font-medium text-[var(--foreground)] ${task.status === 'done' ? 'line-through opacity-50' : ''}`}>
+                  <h3 className={`truncate font-bold uppercase tracking-wide text-lg text-white ${task.status === 'done' ? 'line-through opacity-50 decoration-2 decoration-green-500' : ''}`}>
                     {task.title}
                   </h3>
-                  <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-[var(--muted-foreground)]">
-                    <span className="flex items-center gap-1">
-                      <Circle className="h-3 w-3 fill-current" />
-                      {task.projects?.name || 'No Project'}
+                  <div className="mt-1 flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-500 uppercase">
+                    <span className="flex items-center gap-1 text-yellow-400/80">
+                      <Circle className="h-2 w-2 fill-current" />
+                      {task.projects?.name || 'Freelance'}
                     </span>
                     {task.due_date && (
                       <span className={`flex items-center gap-1 ${
@@ -229,19 +235,23 @@ export default function Tasks() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-3 md:justify-end">
-                <span className={`rounded-full px-2 py-1 text-xs font-medium ${getPriorityColor(task.priority)}`}>
-                  {task.priority}
+              <div className="flex items-center justify-between gap-4 md:justify-end">
+                <span className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-widest border ${
+                    task.priority === 'high' ? 'border-red-500 text-red-500 bg-red-500/10' :
+                    task.priority === 'medium' ? 'border-yellow-500 text-yellow-500 bg-yellow-500/10' :
+                    'border-blue-500 text-blue-500 bg-blue-500/10'
+                }`}>
+                  {task.priority} INTEL
                 </span>
                 
                 <select 
                   value={task.status}
                   onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                  className="rounded-md border border-[var(--border)] bg-[var(--accent)] px-2 py-1 text-xs text-[var(--foreground)] focus:outline-none"
+                  className="bg-black border border-zinc-700 text-zinc-400 text-xs font-mono uppercase px-2 py-1 focus:outline-none focus:border-yellow-400"
                 >
-                  <option value="todo">Todo</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="done">Done</option>
+                  <option value="todo">Pending</option>
+                  <option value="in_progress">Active</option>
+                  <option value="done">Complete</option>
                 </select>
               </div>
             </div>
@@ -252,30 +262,32 @@ export default function Tasks() {
 
       {/* Create Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-lg border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-[var(--foreground)]">New Task</h2>
-            <form onSubmit={handleCreateTask} className="mt-4 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-zinc-900 border-2 border-white p-6 shadow-[15px_15px_0px_#000]">
+            <h2 className="font-['Anton'] text-2xl text-white uppercase mb-6 border-b-2 border-zinc-800 pb-2">New Contract</h2>
+            
+            <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--foreground)]">Title</label>
+                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Objective</label>
                 <input
                   type="text"
                   required
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
+                  placeholder="Eliminate the target..."
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[var(--foreground)]">Project</label>
+                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Operation (Project)</label>
                 <select
                   required
                   value={selectedProject}
                   onChange={(e) => setSelectedProject(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
                 >
-                  <option value="">Select a project</option>
+                  <option value="">Select Operation...</option>
                   {projects.map(p => (
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
@@ -284,41 +296,41 @@ export default function Tasks() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--foreground)]">Priority</label>
+                  <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Intel Level</label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
                   >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <option value="low">Low Risk</option>
+                    <option value="medium">Medium Risk</option>
+                    <option value="high">High Value Target</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--foreground)]">Due Date</label>
+                  <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Deadline</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex justify-end gap-3 pt-6">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-md px-4 py-2 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  className="px-4 py-2 text-xs font-bold text-zinc-500 uppercase hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-bold text-[var(--primary-foreground)] hover:opacity-90"
+                  className="bg-yellow-400 text-black px-6 py-2 font-black uppercase tracking-widest hover:bg-white transition-colors"
                 >
-                  Add Task
+                  Accept Contract
                 </button>
               </div>
             </form>

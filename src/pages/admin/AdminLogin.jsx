@@ -1,18 +1,14 @@
-
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, Loader2, Key, UserPlus, LogIn, AlertCircle } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
+import { Mail, Lock, Loader2, Key, ShieldAlert } from 'lucide-react'
 import { Toaster, toast } from 'sonner'
 
 export default function AdminLogin() {
-  const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('adeyemipelumi2008@gmail.com')
   const [password, setPassword] = useState('pamilerin')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const [showReset, setShowReset] = useState(false)
 
   const handleAuth = async (e) => {
     e.preventDefault()
@@ -23,50 +19,61 @@ export default function AdminLogin() {
         if (email === 'adeyemipelumi2008@gmail.com' && password === 'pamilerin') {
             // SUCCESS
             localStorage.setItem('nexus_admin_session', 'true')
-            toast.success('Welcome back, Admin!')
+            toast.success('Clearance Granted. Welcome, Overseer.', {
+                style: { background: '#000', color: '#22c55e', border: '1px solid #22c55e' }
+            })
             navigate('/admin')
         } else {
             // FAILURE
-            toast.error('Invalid Credentials')
+            toast.error('ACCESS DENIED. INCORRECT CREDENTIALS.', {
+                style: { background: '#000', color: '#ef4444', border: '1px solid #ef4444' }
+            })
         }
         setLoading(false)
     }, 1000)
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-4 py-12 relative overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-black px-4 py-12 relative overflow-hidden font-sans">
       <Toaster position="top-center" theme="dark" />
       
       {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/20 via-[#0a0a0a] to-[#0a0a0a] pointer-events-none" />
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-black to-black pointer-events-none" />
 
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Header */}
-        <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-red-800 shadow-2xl shadow-red-900/50">
-                <Lock className="h-8 w-8 text-white" />
+        <div className="text-center group">
+            <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center border-4 border-red-600 bg-black shadow-[10px_10px_0px_#7f1d1d] transform transition-transform group-hover:scale-110">
+                <ShieldAlert className="h-12 w-12 text-red-600 animate-pulse" />
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-2 font-display">
-                Nexus <span className="text-red-500">Admin</span>
+            <h2 className="font-['Anton'] text-5xl text-white uppercase tracking-widest drop-shadow-[5px_5px_0px_#000]">
+                Restricted<br/><span className="text-red-600">Area</span>
             </h2>
-            <p className="text-zinc-500">
-                Secure access for platform administrators
+            <p className="mt-4 text-zinc-500 font-mono text-xs uppercase tracking-[0.3em]">
+                Level 10 Clearance Required
             </p>
         </div>
 
         {/* Card */}
         <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-white/10 bg-black/50 p-8 shadow-2xl backdrop-blur-xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="border-2 border-zinc-800 bg-black/80 p-8 shadow-[20px_20px_0px_#000] backdrop-blur-sm relative"
         >
-          <form onSubmit={handleAuth} className="space-y-5">
+          {/* Decorative Corner Borders */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-600" />
+          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-red-600" />
+          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-red-600" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-600" />
+
+          <form onSubmit={handleAuth} className="space-y-6 mt-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-400">
-                Email Address
+              <label htmlFor="email" className="block text-xs font-bold text-red-600 uppercase tracking-widest mb-2">
+                Operative ID
               </label>
-              <div className="relative mt-2">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Mail className="h-5 w-5 text-zinc-600" />
                 </div>
                 <input
@@ -75,18 +82,18 @@ export default function AdminLogin() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-lg border border-white/10 bg-white/5 py-3 pl-10 text-zinc-200 placeholder-zinc-600 focus:border-red-500 focus:ring-1 focus:ring-red-500 sm:text-sm transition-all"
-                  placeholder="admin@nexus.com"
+                  className="block w-full bg-black border-2 border-zinc-700 py-4 pl-12 text-white font-mono placeholder-zinc-800 focus:border-red-600 focus:outline-none transition-all uppercase"
+                  placeholder="ID-XXXX-XXXX"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-400">
-                Password
+              <label htmlFor="password" className="block text-xs font-bold text-red-600 uppercase tracking-widest mb-2">
+                Access Key
               </label>
-              <div className="relative mt-2">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Key className="h-5 w-5 text-zinc-600" />
                 </div>
                 <input
@@ -96,48 +103,34 @@ export default function AdminLogin() {
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-lg border border-white/10 bg-white/5 py-3 pl-10 text-zinc-200 placeholder-zinc-600 focus:border-red-500 focus:ring-1 focus:ring-red-500 sm:text-sm transition-all"
+                  className="block w-full bg-black border-2 border-zinc-700 py-4 pl-12 text-white font-mono placeholder-zinc-800 focus:border-red-600 focus:outline-none transition-all"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            {/* SQL Hint Box */}
-            <div className="rounded-lg border border-white/5 bg-white/5 p-4">
-                 <p className="text-xs text-zinc-500 mb-2 font-medium">To grant admin access (Run in Supabase SQL):</p>
-                 <code className="block text-[10px] text-zinc-400 font-mono bg-black/50 p-2 rounded select-all">
-                    update public.profiles set is_admin = true <br/> 
-                    where id in (select id from auth.users where email = '{email || 'EMAIL'}');
-                 </code>
-            </div>
-
-            {/* Password Reset Helper - Only Shows on Error */}
-            {showReset && (
-                <div className="rounded-lg border border-red-500/20 bg-red-900/10 p-4 animate-pulse">
-                    <div className="flex items-center gap-2 mb-2">
-                        <AlertCircle className="h-4 w-4 text-red-500" />
-                        <p className="text-xs font-bold text-red-500">Cannot Login? Reset User:</p>
-                    </div>
-                    <code className="block text-[10px] text-red-200 font-mono bg-black/50 p-2 rounded select-all">
-                        -- Run this to DELETE the user so you can recreate it:<br/>
-                        delete from auth.users where email = '{email}';
-                    </code>
-                </div>
-            )}
-
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-3 text-sm font-bold text-white transition-all hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/20 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-3 bg-red-600 px-4 py-4 text-xl font-['Anton'] uppercase tracking-widest text-white transition-all hover:bg-white hover:text-black border-2 border-transparent hover:border-black disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {loading ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
+                  <Loader2 className="animate-spin h-6 w-6" />
               ) : (
-                  <>Sign In <LogIn className="h-4 w-4" /></>
+                  <>
+                    Authenticate
+                    <Lock className="h-5 w-5 group-hover:unlock transition-all" />
+                  </>
               )}
             </button>
           </form>
         </motion.div>
+        
+        <div className="text-center">
+            <p className="text-[10px] text-zinc-700 font-mono uppercase">
+                Unauthorized access attempts will be logged and prosecuted.<br/>System ID: NX-884-ADMIN
+            </p>
+        </div>
       </div>
     </div>
   )

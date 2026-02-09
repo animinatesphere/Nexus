@@ -5,6 +5,7 @@ import AppLayout from './components/layout/AppLayout'
 import AuthLayout from './components/layout/AuthLayout'
 import LoginOtp from './pages/auth/LoginOtp'
 import AuthGuard from './components/auth/AuthGuard'
+import { Toaster } from 'sonner'
 import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
 import ProjectDetails from './pages/ProjectDetails'
@@ -20,20 +21,21 @@ import AdminLayout from './components/layout/AdminLayout'
 import AdminGuard from './components/auth/AdminGuard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminLogin from './pages/admin/AdminLogin'
+import Upgrade from './pages/Upgrade'
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster richColors position="top-right" />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginOtp />} />
-          <Route path="/register" element={<Navigate to="/login" replace />} />
-        </Route>
-
+        {/* Auth Routes - Standalone for Cinematic Effect */}
+        <Route path="/login" element={<LoginOtp />} />
+        <Route path="/register" element={<Navigate to="/login" replace />} />
+        
         {/* Protected App Routes */}
         <Route element={
           <AuthGuard>
@@ -51,6 +53,7 @@ function App() {
           <Route path="/vault" element={<Vault />} />
           <Route path="/break-room" element={<BreakRoom />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/upgrade" element={<Upgrade />} />
         </Route>
 
         {/* Protected Admin Routes */}

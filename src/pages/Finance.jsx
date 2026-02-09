@@ -77,57 +77,50 @@ export default function Finance() {
   const COLORS = ['#10b981', '#ef4444']
 
   return (
+
     <div className="space-y-8 pb-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-zinc-800 pb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--foreground)]">Finance & Budgeting</h1>
-          <p className="mt-2 text-[var(--muted-foreground)]">Track your financial health</p>
+          <h1 className="font-['Anton'] text-5xl text-white uppercase tracking-tight drop-shadow-[3px_3px_0px_#000]">
+            Dirty Financing
+          </h1>
+          <p className="mt-2 text-zinc-500 font-mono text-xs uppercase tracking-widest">
+            Money Laundering // Stash Management
+          </p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 rounded-md bg-[var(--primary)] px-4 py-2 font-medium text-[var(--primary-foreground)] hover:opacity-90"
+          className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 font-['Anton'] uppercase tracking-wider hover:bg-green-500 hover:scale-105 transition-all shadow-[4px_4px_0px_#000] border-2 border-black"
         >
-          <Plus className="h-4 w-4" />
-          Add Transaction
+          <DollarSign className="h-5 w-5" />
+          Cook Books / Add Entry
         </button>
       </div>
 
       {/* Summary Cards */}
       <div className="grid gap-6 sm:grid-cols-3">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-blue-500/10 p-3">
-              <DollarSign className="h-6 w-6 text-blue-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-[var(--muted-foreground)]">Total Balance</p>
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">${balance.toFixed(2)}</h3>
-            </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-none border-2 border-zinc-700 bg-black p-6 relative">
+          <div className="absolute top-2 right-2 text-zinc-700">
+             <DollarSign className="h-12 w-12 opacity-20" />
           </div>
+          <p className="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-1">Total Stash (Net)</p>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide">${balance.toFixed(2)}</h3>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-green-500/10 p-3">
-              <TrendingUp className="h-6 w-6 text-green-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-[var(--muted-foreground)]">Income</p>
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">${income.toFixed(2)}</h3>
-            </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-none border-2 border-zinc-700 bg-black p-6 relative">
+           <div className="absolute top-2 right-2 text-green-900">
+             <TrendingUp className="h-12 w-12 opacity-20" />
           </div>
+          <p className="text-xs font-bold text-green-500 uppercase tracking-widest mb-1">Laundered (Income)</p>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-green-500">+${income.toFixed(2)}</h3>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-red-500/10 p-3">
-              <TrendingDown className="h-6 w-6 text-red-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-[var(--muted-foreground)]">Expenses</p>
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">${expense.toFixed(2)}</h3>
-            </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-none border-2 border-zinc-700 bg-black p-6 relative">
+           <div className="absolute top-2 right-2 text-red-900">
+             <TrendingDown className="h-12 w-12 opacity-20" />
           </div>
+          <p className="text-xs font-bold text-red-500 uppercase tracking-widest mb-1">Bribes / Costs (Expense)</p>
+          <h3 className="text-4xl font-['Anton'] text-white tracking-wide text-red-500">-${expense.toFixed(2)}</h3>
         </motion.div>
       </div>
 
@@ -137,22 +130,22 @@ export default function Finance() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm"
+          className="rounded-none border-2 border-zinc-700 bg-zinc-900/50 p-6"
         >
-          <h3 className="mb-6 text-lg font-semibold text-[var(--foreground)]">Cash Flow</h3>
-          <div className="h-64 w-full">
+          <h3 className="mb-6 font-['Anton'] text-2xl text-white uppercase">Cash Flow Analysis</h3>
+          <div className="h-64 w-full font-mono text-xs">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="name" stroke="var(--muted-foreground)" />
-                <YAxis stroke="var(--muted-foreground)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                <XAxis dataKey="name" stroke="#666" tick={{fill: '#888'}} />
+                <YAxis stroke="#666" tick={{fill: '#888'}} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--foreground)' }}
-                  cursor={{ fill: 'var(--accent)' }}
+                  contentStyle={{ backgroundColor: '#000', borderColor: '#333', color: '#fff', fontFamily: 'monospace' }}
+                  cursor={{ fill: '#ffffff10' }}
                 />
-                <Bar dataKey="amount" fill="var(--primary)" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="amount" radius={[0, 0, 0, 0]}>
                   {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % 20]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % 20]} stroke="black" strokeWidth={2} />
                   ))}
                 </Bar>
               </BarChart>
@@ -164,32 +157,31 @@ export default function Finance() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm"
+          className="relative overflow-hidden rounded-none border-2 border-zinc-700 bg-black p-6"
         >
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div className="rounded-full bg-[var(--primary)] p-4 shadow-lg">
-              <Lock className="h-8 w-8 text-white" />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-6 text-center">
+            <div className="rounded-none border-2 border-yellow-400 p-4 bg-yellow-400/10 mb-4 animate-pulse">
+              <Lock className="h-8 w-8 text-yellow-400" />
             </div>
-            <h3 className="mt-4 text-xl font-bold text-white">Advanced Analytics</h3>
-            <p className="mt-2 text-center text-sm text-gray-200">
-              Upgrade to Premium to unlock <br/> custom reports and category breakdown.
+            <h3 className="text-2xl font-['Anton'] uppercase text-white">Restricted Access</h3>
+            <p className="mt-2 text-zinc-400 font-mono text-xs uppercase tracking-wider">
+               Advanced financial laundering patterns required. <br/> Upgrade clearance level.
             </p>
-            <button className="mt-6 rounded-full bg-white px-6 py-2 text-sm font-bold text-black hover:bg-gray-100">
-              Upgrade Now
+            <button className="mt-6 bg-white text-black font-['Anton'] uppercase tracking-widest px-8 py-3 hover:bg-yellow-400 transition-colors">
+              Purchase Access
             </button>
           </div>
           
           {/* Mock Content Behind Lock */}
-          <div className="opacity-20 blur-sm">
+          <div className="opacity-20 blur-sm grayscale">
              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-semibold">Spending by Category</h3>
-                <Download className="h-5 w-5" />
+                <h3 className="text-lg font-bold uppercase">Categorized Laundering</h3>
              </div>
              <div className="space-y-4">
                 {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="flex justify-between">
-                        <div className="h-4 w-32 bg-gray-300 rounded"></div>
-                        <div className="h-4 w-12 bg-gray-300 rounded"></div>
+                    <div key={i} className="flex justify-between items-center border-b border-zinc-800 pb-2">
+                        <div className="h-4 w-32 bg-zinc-700"></div>
+                        <div className="h-4 w-12 bg-zinc-700"></div>
                     </div>
                 ))}
             </div>
@@ -198,32 +190,32 @@ export default function Finance() {
       </div>
 
       {/* Recent Transactions */}
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-        <div className="border-b border-[var(--border)] px-6 py-4">
-          <h3 className="text-lg font-semibold text-[var(--foreground)]">Recent Transactions</h3>
+      <div className="border border-zinc-800 bg-black">
+        <div className="border-b border-zinc-800 px-6 py-4 bg-zinc-900">
+          <h3 className="font-['Anton'] text-lg text-white uppercase tracking-wider">Recent Transactions</h3>
         </div>
-        <div className="divide-y divide-[var(--border)]">
+        <div className="divide-y divide-zinc-800">
           {loading ? (
-             <div className="p-6 text-center text-[var(--muted-foreground)]">Loading...</div>
+             <div className="p-6 text-center text-zinc-500 font-mono uppercase">Decrypting ledger...</div>
           ) : transactions.length === 0 ? (
-             <div className="p-6 text-center text-[var(--muted-foreground)]">No transactions yet.</div>
+             <div className="p-6 text-center text-zinc-500 font-mono uppercase">No records found. Clean slate.</div>
           ) : (
             transactions.map((t) => (
-              <div key={t.id} className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-[var(--accent)]/50">
+              <div key={t.id} className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-zinc-900/50 group">
                 <div className="flex items-center gap-4">
-                  <div className={`rounded-full p-2 ${t.type === 'income' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                  <div className={`p-2 border ${t.type === 'income' ? 'border-green-900 bg-green-900/10 text-green-500' : 'border-red-900 bg-red-900/10 text-red-500'}`}>
                     {t.type === 'income' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
                   </div>
                   <div>
-                    <p className="font-medium text-[var(--foreground)]">{t.description || 'Untitled Transaction'}</p>
-                    <p className="text-sm text-[var(--muted-foreground)] capitalize">{t.category}</p>
+                    <p className="font-bold text-white uppercase tracking-wide group-hover:text-yellow-400 transition-colors">{t.description || 'Unknown'}</p>
+                    <p className="text-xs text-zinc-500 font-mono uppercase">{t.category}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`font-bold ${t.type === 'income' ? 'text-green-500' : 'text-[var(--foreground)]'}`}>
+                  <p className={`font-mono font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
                     {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
                   </p>
-                  <p className="text-xs text-[var(--muted-foreground)]">{new Date(t.date).toLocaleDateString()}</p>
+                  <p className="text-xs text-zinc-600 font-mono uppercase">{new Date(t.date).toLocaleDateString()}</p>
                 </div>
               </div>
             ))
@@ -233,83 +225,86 @@ export default function Finance() {
 
       {/* Add Transaction Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-lg border border-[var(--border)] bg-[var(--card)] p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-[var(--foreground)]">New Transaction</h2>
-            <form onSubmit={handleAddTransaction} className="mt-4 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-zinc-900 border-2 border-white p-6 shadow-[20px_20px_0px_#000]">
+            <h2 className="font-['Anton'] text-2xl text-white uppercase mb-6 border-b-2 border-zinc-800 pb-2">Log New Entry</h2>
+            
+            <form onSubmit={handleAddTransaction} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setType('expense')}
-                  className={`rounded-md py-2 text-sm font-medium border ${type === 'expense' ? 'border-red-500 bg-red-500/10 text-red-500' : 'border-[var(--border)] text-[var(--muted-foreground)]'}`}
+                  className={`py-3 text-xs font-bold uppercase tracking-widest border-2 transition-all ${type === 'expense' ? 'border-red-500 bg-red-500 text-black' : 'border-zinc-700 text-zinc-500 hover:border-white hover:text-white'}`}
                 >
                   Expense
                 </button>
                 <button
                   type="button"
                   onClick={() => setType('income')}
-                  className={`rounded-md py-2 text-sm font-medium border ${type === 'income' ? 'border-green-500 bg-green-500/10 text-green-500' : 'border-[var(--border)] text-[var(--muted-foreground)]'}`}
+                  className={`py-3 text-xs font-bold uppercase tracking-widest border-2 transition-all ${type === 'income' ? 'border-green-500 bg-green-500 text-black' : 'border-zinc-700 text-zinc-500 hover:border-white hover:text-white'}`}
                 >
                   Income
                 </button>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--foreground)]">Amount</label>
-                <div className="relative mt-1">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]">$</span>
+                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Amount</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-mono">$</span>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="block w-full rounded-md border border-[var(--border)] bg-[var(--input)] pl-7 pr-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    className="block w-full bg-black border border-zinc-700 pl-8 pr-3 py-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
+                    placeholder="0.00"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--foreground)]">Category</label>
+                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none uppercase text-xs"
                 >
-                  <option value="food">Food & Dining</option>
-                  <option value="transport">Transportation</option>
-                  <option value="utilities">Utilities</option>
-                  <option value="housing">Housing</option>
-                  <option value="entertainment">Entertainment</option>
-                  <option value="salary">Salary</option>
-                  <option value="business">Business</option>
-                  <option value="other">Other</option>
+                  <option value="food">Consumables / Dining</option>
+                  <option value="transport">Vehicles / Transport</option>
+                  <option value="utilities">Safehouse Utilities</option>
+                  <option value="housing">Safehouse Rent</option>
+                  <option value="entertainment">R&R / Entertainment</option>
+                  <option value="salary">Payout / Salary</option>
+                  <option value="business">Front Business</option>
+                  <option value="other">Miscellaneous</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--foreground)]">Description</label>
+                <label className="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-2">Description / Memo</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                  className="w-full bg-black border border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none"
+                  placeholder="e.g. Cleaned via Casino..."
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex justify-end gap-3 pt-6">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-md px-4 py-2 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  className="px-4 py-2 text-xs font-bold text-zinc-500 uppercase hover:text-white"
                 >
-                  Cancel
+                  Abort
                 </button>
                 <button
                   type="submit"
-                  className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-bold text-[var(--primary-foreground)] hover:opacity-90"
+                  className="bg-yellow-400 text-black px-6 py-2 font-black uppercase tracking-widest hover:bg-white transition-colors"
                 >
-                  Save Transaction
+                  Cook Books
                 </button>
               </div>
             </form>

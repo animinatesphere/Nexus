@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Unlock, Upload, File, Image as ImageIcon, Shield, Plus } from 'lucide-react'
@@ -81,19 +80,23 @@ export default function Vault() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 h-full flex flex-col">
+      <div className="flex items-center justify-between border-b-2 border-zinc-800 pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--foreground)]">The Vault</h1>
-          <p className="mt-2 text-[var(--muted-foreground)]">Secure storage for your private files</p>
+          <h1 className="font-['Anton'] text-5xl text-white uppercase tracking-tight drop-shadow-[3px_3px_0px_#000]">
+            The Vault
+          </h1>
+          <p className="mt-2 text-zinc-500 font-mono text-xs uppercase tracking-widest">
+            Secure Evidence Storage // Classified
+          </p>
         </div>
         {!isLocked && (
           <button 
             onClick={handleLock}
-            className="flex items-center gap-2 rounded-md bg-red-500/10 px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500/20"
+            className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 font-['Anton'] uppercase tracking-wider hover:bg-red-500 transition-all shadow-[4px_4px_0px_#000] border-2 border-black"
           >
-            <Lock className="h-4 w-4" />
-            Lock Vault
+            <Lock className="h-5 w-5" />
+            Engage Locks
           </button>
         )}
       </div>
@@ -102,37 +105,58 @@ export default function Vault() {
         {isLocked ? (
           <motion.div 
             key="lock-screen"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 text-center shadow-lg"
+            exit={{ opacity: 0, scale: 1.05 }}
+            className="flex-1 flex flex-col items-center justify-center"
           >
-            <div className="mb-6 rounded-full bg-[var(--primary)]/10 p-6">
-              <Shield className="h-12 w-12 text-[var(--primary)]" />
-            </div>
-            <h2 className="text-2xl font-bold text-[var(--foreground)]">Vault Locked</h2>
-            <p className="mb-8 mt-2 text-[var(--muted-foreground)]">
-               {savedPin === '1234' ? 'Enter default PIN: 1234' : 'Enter your secure PIN'}
-            </p>
+            <div className="w-full max-w-md bg-zinc-900 border-4 border-zinc-700 p-8 shadow-[20px_20px_0px_#000] relative overflow-hidden">
+                {/* Decorative Bolts */}
+                <div className="absolute top-2 left-2 w-3 h-3 rounded-full bg-zinc-600 shadow-inner" />
+                <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-zinc-600 shadow-inner" />
+                <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-zinc-600 shadow-inner" />
+                <div className="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-zinc-600 shadow-inner" />
+
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center p-6 bg-black border-2 border-zinc-800 rounded-full mb-4">
+                        <Shield className="h-12 w-12 text-zinc-500" />
+                    </div>
+                    <h2 className="font-['Anton'] text-3xl text-white uppercase tracking-widest">Restricted Access</h2>
+                    <p className="mt-2 text-red-500 font-mono text-xs uppercase animate-pulse">
+                        Level 5 Security Clearance Required
+                    </p>
+                </div>
             
-            <form onSubmit={handleUnlock} className="flex flex-col items-center gap-4">
-              <input
-                type="password"
-                maxLength={4}
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                placeholder="PIN"
-                className="w-32 rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-center text-2xl font-bold tracking-widest text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none"
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <button
-                type="submit"
-                className="w-32 rounded-lg bg-[var(--primary)] px-6 py-3 font-bold text-[var(--primary-foreground)] hover:opacity-90"
-              >
-                Unlock
-              </button>
-            </form>
-            <p className="mt-4 text-xs text-[var(--muted-foreground)]">You can change your PIN in Settings</p>
+                <form onSubmit={handleUnlock} className="flex flex-col items-center gap-6">
+                    <div className="w-full relative">
+                        <input
+                            type="password"
+                            maxLength={4}
+                            value={pin}
+                            onChange={(e) => setPin(e.target.value)}
+                            placeholder="_ _ _ _"
+                            className="w-full bg-black border-2 border-zinc-600 px-4 py-4 text-center text-4xl font-mono font-bold tracking-[1em] text-white focus:border-yellow-400 focus:outline-none placeholder-zinc-800"
+                        />
+                         <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+                    </div>
+
+                    {error && (
+                        <div className="w-full bg-red-900/20 border border-red-500 p-2 text-center">
+                            <p className="text-red-500 font-mono text-xs uppercase font-bold">{error}</p>
+                        </div>
+                    )}
+                    
+                    <button
+                        type="submit"
+                        className="w-full bg-white text-black font-['Anton'] text-xl uppercase py-4 tracking-widest hover:bg-yellow-400 transition-colors border-2 border-zinc-500"
+                    >
+                        Authenticate
+                    </button>
+                </form>
+                <p className="mt-6 text-center text-zinc-600 font-mono text-[10px] uppercase">
+                    {savedPin === '1234' ? 'DEBUG MODE: PIN IS 1234' : 'Attempts logged by server'}
+                </p>
+            </div>
           </motion.div>
         ) : (
           <motion.div 
@@ -142,34 +166,38 @@ export default function Vault() {
             className="space-y-6"
           >
             {/* Upload Area */}
-            <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--card)]/50 p-8 text-center transition-colors hover:border-[var(--primary)]">
-              <Upload className="mx-auto h-8 w-8 text-[var(--muted-foreground)]" />
-              <p className="mt-2 text-sm text-[var(--muted-foreground)]">Drag & drop files here or click to upload</p>
+            <div className="border-2 border-dashed border-zinc-700 bg-zinc-900/30 p-12 text-center hover:bg-zinc-900/50 hover:border-yellow-400 transition-all cursor-pointer group">
+              <Upload className="mx-auto h-12 w-12 text-zinc-600 group-hover:text-yellow-400 transition-colors" />
+              <p className="mt-4 font-['Anton'] text-xl text-white uppercase tracking-wider">Drop Evidence Here</p>
+              <p className="text-zinc-500 font-mono text-xs uppercase">Secure encryption enabled</p>
             </div>
 
             {/* File Web */}
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
               {items.length > 0 ? items.map((item) => (
-                <div key={item.id} className="group relative aspect-square rounded-xl border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:shadow-md">
-                  <div className="flex h-full flex-col items-center justify-center gap-2">
+                <div key={item.id} className="group relative aspect-square border-2 border-zinc-800 bg-black p-4 hover:border-yellow-400 transition-all">
+                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="h-2 w-2 bg-yellow-400 rounded-full animate-pulse" />
+                   </div>
+                  <div className="flex h-full flex-col items-center justify-center gap-4">
                     {item.type === 'image' ? (
-                      <ImageIcon className="h-8 w-8 text-purple-500" />
+                      <ImageIcon className="h-10 w-10 text-zinc-400 group-hover:text-white" />
                     ) : (
-                      <File className="h-8 w-8 text-blue-500" />
+                      <File className="h-10 w-10 text-zinc-400 group-hover:text-white" />
                     )}
-                    <span className="text-center text-sm font-medium text-[var(--foreground)] truncate w-full">{item.name}</span>
+                    <span className="text-center font-mono text-xs text-zinc-500 group-hover:text-yellow-400 truncate w-full uppercase">{item.name}</span>
                   </div>
                 </div>
               )) : (
-                 <div className="col-span-full py-8 text-center text-[var(--muted-foreground)]">
-                    No files yet. Upload something secure!
+                 <div className="col-span-full py-12 text-center border-2 border-zinc-800 bg-black">
+                    <p className="text-zinc-500 font-mono uppercase tracking-widest">Vault Empty. No intel stored.</p>
                  </div>
               )}
               
               {/* Add New Placeholder */}
-              <button className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--accent)]/50 text-[var(--muted-foreground)] hover:bg-[var(--accent)] hover:text-[var(--foreground)]">
-                <Plus className="h-6 w-6" />
-                <span className="text-sm font-medium">Add New</span>
+              <button className="flex aspect-square flex-col items-center justify-center gap-2 border-2 border-zinc-800 bg-zinc-900/50 text-zinc-600 hover:text-white hover:bg-zinc-800 hover:border-white transition-all">
+                <Plus className="h-8 w-8" />
+                <span className="font-['Anton'] text-sm uppercase tracking-wider">New File</span>
               </button>
             </div>
           </motion.div>

@@ -103,61 +103,74 @@ export default function TimeTracking() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-[var(--foreground)]">Time Tracking</h1>
-        <p className="mt-2 text-[var(--muted-foreground)]">Track time spent on your active tasks</p>
+    <div className="space-y-8 h-full">
+      <div className="border-b-2 border-zinc-800 pb-6">
+        <h1 className="font-['Anton'] text-5xl text-white uppercase tracking-tight drop-shadow-[3px_3px_0px_#000]">
+          Heist Timer
+        </h1>
+        <p className="mt-2 text-zinc-500 font-mono text-xs uppercase tracking-widest">
+          Operation Duration // Alibi Generator
+        </p>
       </div>
 
       {/* Timer Card */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-sm"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="rounded-none border-2 border-zinc-700 bg-black/80 p-8 shadow-[10px_10px_0px_#000] relative overflow-hidden"
       >
-        <div className="flex flex-col items-center gap-8 md:flex-row md:justify-between">
-          <div className="w-full md:w-1/3">
-            <label className="block text-sm font-medium text-[var(--foreground)]">Select Task</label>
+        {/* Decorative Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(30,30,30,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(30,30,30,0.5)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col items-center gap-8 md:flex-row md:justify-between">
+          <div className="w-full md:w-1/3 space-y-2">
+            <label className="block text-xs font-bold text-yellow-400 uppercase tracking-widest">Active Contract</label>
             <select
               value={selectedTask}
               onChange={(e) => setSelectedTask(e.target.value)}
               disabled={isTimerRunning}
-              className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] disabled:opacity-50"
+              className="w-full bg-zinc-900 border-2 border-zinc-700 p-3 text-white font-mono focus:border-yellow-400 focus:outline-none uppercase"
             >
-              <option value="">Choose a task...</option>
+              <option value="">Select Target...</option>
               {tasks.map(t => (
                 <option key={t.id} value={t.id}>
-                  {t.title} ({t.projects?.name})
+                  {t.title} // {t.projects?.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="flex flex-col items-center">
-            <div className={`text-6xl font-mono font-bold tracking-wider ${isTimerRunning ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'}`}>
+            <div className={`text-7xl font-mono font-black tracking-widest tabular-nums drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] ${isTimerRunning ? 'text-red-500 animate-pulse' : 'text-zinc-600'}`}>
               {formatTime(elapsedTime)}
             </div>
-            {isTimerRunning && <p className="mt-2 text-sm text-[var(--primary)] animate-pulse">Tracking...</p>}
+            {isTimerRunning && (
+                <div className="mt-2 flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
+                    <p className="text-xs text-red-500 font-mono uppercase tracking-widest">Recording Evidence...</p>
+                </div>
+            )}
           </div>
 
           <div className="w-full md:w-auto">
             <button
               onClick={toggleTimer}
-              className={`flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-lg font-bold transition-all md:w-auto ${
+              className={`flex w-full items-center justify-center gap-3 px-8 py-4 text-xl font-['Anton'] uppercase tracking-widest transition-all clip-path-slant md:w-auto border-2 ${
                 isTimerRunning 
-                  ? 'bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20' 
-                  : 'bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 shadow-lg shadow-indigo-500/20'
+                  ? 'bg-red-600 text-white border-red-800 hover:bg-black hover:text-red-500' 
+                  : 'bg-yellow-400 text-black border-yellow-600 hover:bg-white hover:border-white'
               }`}
+              style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
             >
               {isTimerRunning ? (
                 <>
                   <Square className="h-5 w-5 fill-current" />
-                  Stop Timer
+                  Abort / Save
                 </>
               ) : (
                 <>
                   <Play className="h-5 w-5 fill-current" />
-                  Start Timer
+                  Execute
                 </>
               )}
             </button>
@@ -166,45 +179,45 @@ export default function TimeTracking() {
       </motion.div>
 
       {/* Recent Entries */}
-      <div className="space-y-4">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-[var(--foreground)]">
-          <History className="h-5 w-5 text-[var(--muted-foreground)]" />
-          Recent Activity
+      <div className="space-y-6">
+        <h2 className="flex items-center gap-3 text-2xl font-['Anton'] text-white uppercase tracking-wide">
+          <History className="h-6 w-6 text-yellow-400" />
+          Time Sheet Logs
         </h2>
         
         {loading ? (
-          <div className="text-center text-[var(--muted-foreground)]">Loading history...</div>
+          <div className="text-center text-zinc-500 font-mono uppercase animate-pulse">Decrypting Logs...</div>
         ) : recentEntries.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-[var(--border)] p-8 text-center text-[var(--muted-foreground)]">
-            No time entries recorded yet.
+          <div className="border-2 border-dashed border-zinc-800 p-8 text-center bg-zinc-900/50">
+            <p className="text-zinc-600 font-mono uppercase">No alibis recorded yet.</p>
           </div>
         ) : (
-          <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-            <table className="min-w-full divide-y divide-[var(--border)]">
-              <thead className="bg-[var(--accent)]">
+          <div className="border border-zinc-800 bg-black">
+            <table className="min-w-full divide-y divide-zinc-800">
+              <thead className="bg-zinc-900">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">Task</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">Project</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)]">Duration</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-yellow-400 uppercase tracking-widest">Operation</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-yellow-400 uppercase tracking-widest">Scheme</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-yellow-400 uppercase tracking-widest">Timeline</th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-yellow-400 uppercase tracking-widest">Duration</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border)] bg-[var(--card)]">
+              <tbody className="divide-y divide-zinc-800 bg-black">
                 {recentEntries.map((entry) => (
-                  <tr key={entry.id} className="hover:bg-[var(--accent)]/50">
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-[var(--foreground)]">
-                      {entry.tasks?.title || 'Unknown Task'}
+                  <tr key={entry.id} className="hover:bg-zinc-900/50 transition-colors group">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-bold text-white uppercase group-hover:text-yellow-400 transition-colors">
+                      {entry.tasks?.title || 'Unknown Op'}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-[var(--muted-foreground)]">
-                      {entry.tasks?.projects?.name || '-'}
+                    <td className="whitespace-nowrap px-6 py-4 text-xs font-mono text-zinc-500 uppercase">
+                      {entry.tasks?.projects?.name || 'Freelance'}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-[var(--muted-foreground)]">
-                      <div className="flex items-center gap-1">
+                    <td className="whitespace-nowrap px-6 py-4 text-xs font-mono text-zinc-500">
+                      <div className="flex items-center gap-2">
                         <Calendar className="h-3 w-3" />
                         {new Date(entry.start_time).toLocaleDateString()}
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-mono text-[var(--foreground)]">
+                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-mono text-white">
                       {formatTime(entry.duration)}
                     </td>
                   </tr>

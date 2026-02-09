@@ -17,21 +17,6 @@ export default function KanbanCard({ task, isOverlay }) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.3 : 1,
-  }
-
-  const priorityColor = {
-    high: 'text-red-400 bg-red-400/10',
-    medium: 'text-yellow-400 bg-yellow-400/10',
-    low: 'text-blue-400 bg-blue-400/10',
-  }
-
-  if (isOverlay) {
-    return (
-        <div className="cursor-grabbing rounded-lg border border-primary/50 bg-zinc-800 p-4 shadow-2xl rotate-3">
-             <h4 className="font-medium text-white">{task.title}</h4>
-        </div>
-    )
   }
 
   return (
@@ -40,32 +25,38 @@ export default function KanbanCard({ task, isOverlay }) {
       style={style}
       {...attributes}
       {...listeners}
-      className="group cursor-grab rounded-lg border border-white/5 bg-zinc-800/80 p-4 shadow-sm transition-all hover:border-white/10 hover:shadow-md active:cursor-grabbing"
+      className={`
+        group relative flex cursor-grab flex-col gap-3 border-l-4 bg-zinc-900 p-4 shadow-md transition-all
+        ${isOverlay ? 'rotate-2 scale-105 shadow-xl ring-2 ring-yellow-400 z-50 cursor-grabbing' : 'hover:border-yellow-400 hover:bg-zinc-800'}
+        ${isDragging ? 'opacity-30' : 'opacity-100'}
+        ${task.status === 'done' ? 'border-green-600 opacity-60' : 'border-zinc-700'}
+      `}
     >
-      <div className="mb-2 flex items-start justify-between gap-2">
-         <h4 className="text-sm font-medium text-zinc-100 line-clamp-2">{task.title}</h4>
+      <div className="flex items-start justify-between">
+         <h4 className={`font-bold uppercase tracking-wide text-sm text-white ${task.status === 'done' && 'line-through'}`}>
+            {task.title}
+         </h4>
+
+         <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${
+            task.priority === 'high' ? 'text-red-500 bg-red-900/20' :
+            task.priority === 'medium' ? 'text-yellow-500 bg-yellow-900/20' :
+            'text-blue-500 bg-blue-900/20'
+         }`}>
+            {task.priority}
+         </span>
       </div>
 
-      <div className="flex items-center gap-2 mt-3">
-        {task.priority && (
-            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${priorityColor[task.priority] || priorityColor.medium}`}>
-                {task.priority}
+      <div className="mt-2 flex items-center justify-between text-xs text-zinc-500 font-mono">
+        <span className="truncate max-w-[120px] uppercase">
+             {task.projects?.name || 'No Ops'}
+        </span>
+        {task.due_date && (
+            <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {new Date(task.due_date).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' })}
             </span>
         )}
-        {task.due_date && (
-            <div className="flex items-center gap-1 text-[10px] text-zinc-500">
-                <Calendar className="h-3 w-3" />
-                <span>{new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-            </div>
-        )}
       </div>
-      
-      {task.projects && (
-           <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-500 border-t border-white/5 pt-2">
-                <Tag className="h-3 w-3" />
-                <span className="truncate">{task.projects.name}</span>
-           </div>
-      )}
     </div>
   )
 }

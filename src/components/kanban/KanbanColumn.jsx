@@ -4,34 +4,44 @@ import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import KanbanCard from './KanbanCard'
 
-export default function KanbanColumn({ id, title, tasks, count, color }) {
-  const { setNodeRef } = useDroppable({
-    id: id,
-  })
+export default function KanbanColumn({ id, title, count, color, tasks }) {
+  const { setNodeRef } = useDroppable({ id })
 
   return (
-    <div className="flex h-full w-80 min-w-[20rem] flex-col rounded-xl bg-zinc-900/50 border border-white/5">
-      {/* Column Header */}
-      <div className="flex items-center justify-between p-4 border-b border-white/5">
-        <div className="flex items-center gap-2">
-            <div className={`h-2 w-2 rounded-full ${color}`} />
-            <h3 className="font-semibold text-zinc-100">{title}</h3>
+    <SortableContext 
+      id={id} 
+      items={tasks.map(t => t.id)} 
+      strategy={verticalListSortingStrategy}
+    >
+      <div 
+        ref={setNodeRef}
+        className="flex h-full w-80 shrink-0 flex-col rounded-none border-2 border-zinc-800 bg-black/50 backdrop-blur-sm"
+      >
+        {/* Header */}
+        <div className={`flex items-center justify-between border-b-2 border-zinc-700 p-4 ${id === 'todo' ? 'bg-zinc-900' : id === 'in_progress' ? 'bg-blue-900/20' : 'bg-green-900/20'}`}>
+          <div className="flex items-center gap-2">
+            <span className={`h-3 w-3 ${color.replace('bg-', 'bg-')}`} />
+            <h3 className="font-['Anton'] text-lg uppercase tracking-wider text-white">
+                {title}
+            </h3>
+          </div>
+          <span className="rounded bg-black px-2 py-0.5 text-xs font-mono font-bold text-zinc-500 border border-zinc-800">
+            {count}
+          </span>
         </div>
-        <span className="rounded bg-white/5 px-2 py-0.5 text-xs text-zinc-400">{count}</span>
-      </div>
 
-      {/* Droppable Area */}
-      <div ref={setNodeRef} className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
-        <SortableContext id={id} items={tasks} strategy={verticalListSortingStrategy}>
+        {/* List */}
+        <div className="flex-1 space-y-3 overflow-y-auto p-3 custom-scrollbar">
           {tasks.map((task) => (
             <KanbanCard key={task.id} task={task} />
           ))}
-          {/* Placeholder for empty columns to make them easier to drop into */}
           {tasks.length === 0 && (
-             <div className="h-full w-full opacity-0 min-h-[50px]" />
+             <div className="py-8 text-center border border-dashed border-zinc-800 opacity-50">
+                <p className="text-xs uppercase tracking-widest text-zinc-600">No Intel</p>
+             </div>
           )}
-        </SortableContext>
+        </div>
       </div>
-    </div>
+    </SortableContext>
   )
 }

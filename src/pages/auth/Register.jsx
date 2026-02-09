@@ -1,110 +1,51 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { motion } from 'framer-motion'
+import { UserPlus, ArrowRight, ShieldAlert } from 'lucide-react'
 
 export default function Register() {
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [msg, setMsg] = useState('')
   const navigate = useNavigate()
-  const [formData, setFormData] = React.useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [loading, setLoading] = React.useState(false)
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleRegister = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault()
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
-      return
-    }
-
     setLoading(true)
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-      options: {
-        data: {
-          full_name: formData.fullName,
-        },
-      },
-    })
+    setMsg('')
 
-    if (error) {
-      alert(error.message)
-    } else {
-      alert('Registration successful! Please check your email to verify your account.')
-      navigate('/login')
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        options: {
+          emailRedirectTo: window.location.origin + '/app',
+        },
+      })
+
+      if (error) throw error
+      setMsg('Identity Record Created. Verify via secure comms (email).')
+    } catch (error) {
+      setMsg(error.message)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
-    <form onSubmit={handleRegister} className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-[var(--foreground)]">Create an account</h2>
-        <p className="text-sm text-[var(--muted-foreground)]">Get started with SaaS Pro today</p>
-      </div>
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden font-sans">
+      {/* Background with Overlay */}
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514525253440-b393452e8d26?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center opacity-40 grayscale" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-[var(--foreground)]">Full Name</label>
-          <input 
-            type="text" 
-            name="fullName"
-            required
-            value={formData.fullName}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[var(--foreground)]">Email</label>
-          <input 
-            type="email" 
-            name="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[var(--foreground)]">Password</label>
-          <input 
-            type="password" 
-            name="password"
-            required
-            value={formData.password}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[var(--foreground)]">Confirm Password</label>
-          <input 
-            type="password" 
-            name="confirmPassword"
-            required
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-          />
-        </div>
-      </div>
-
-      <button 
-        type="submit" 
-        disabled={loading}
-        className="w-full rounded-md bg-[var(--primary)] py-2 text-sm font-bold text-[var(--primary-foreground)] hover:opacity-90 disabled:opacity-50"
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 w-full max-w-md bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-700 p-8 shadow-[10px_10px_0px_#FFF]"
       >
-        {loading ? 'Creating Account...' : 'Sign Up'}
-      </button>
       
       <div className="text-center text-sm">
         <span className="text-[var(--muted-foreground)]">Already have an account? </span>
