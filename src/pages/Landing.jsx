@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Trophy, Target, Zap, DollarSign, Lock, Gamepad2, Skull, Map } from 'lucide-react'
+import { useAudio } from '../hooks/useAudio'
 
 // GTA Style Assets - Reliable High-Quality URLs
 const BACKGROUNDS = [
@@ -23,6 +24,7 @@ const GALLERY_IMAGES = [
 export default function Landing() {
   const [currentBg, setCurrentBg] = useState(0)
   const [loading, setLoading] = useState(true)
+  const { playClick, playHover, playIntro } = useAudio()
 
   // Cycle Backgrounds
   useEffect(() => {
@@ -32,6 +34,11 @@ export default function Landing() {
     return () => clearInterval(timer)
   }, [])
 
+  const handleIntroComplete = () => {
+    setLoading(false)
+    playIntro()
+  }
+
   return (
     <div className="relative min-h-screen bg-black overflow-hidden font-sans text-white cursor-none">
       
@@ -40,7 +47,7 @@ export default function Landing() {
 
       {/* Intro Loading Screen */}
       <AnimatePresence>
-        {loading && <IntroOverlay onComplete={() => setLoading(false)} />}
+        {loading && <IntroOverlay onComplete={handleIntroComplete} />}
       </AnimatePresence>
 
       {/* KEN BURNS BACKGROUND SLIDESHOW */}
@@ -116,7 +123,12 @@ export default function Landing() {
             transition={{ delay: 4.5, type: 'spring' }}
             className="mt-10 flex flex-wrap gap-4"
         >
-            <Link to="/login" className="px-8 py-4 bg-white text-black font-['Anton'] text-xl uppercase tracking-widest hover:bg-yellow-400 hover:scale-110 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] border-2 border-transparent hover:border-black">
+            <Link 
+                to="/login" 
+                onClick={playClick}
+                onMouseEnter={playHover}
+                className="px-8 py-4 bg-white text-black font-['Anton'] text-xl uppercase tracking-widest hover:bg-yellow-400 hover:scale-110 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] border-2 border-transparent hover:border-black"
+            >
                 Start Mission
             </Link>
         </motion.div>

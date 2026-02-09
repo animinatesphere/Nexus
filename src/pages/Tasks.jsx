@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Plus, CheckCircle2, Circle, Clock, AlertCircle, Calendar, LayoutGrid, List } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import KanbanBoard from '../components/kanban/KanbanBoard'
+import { useAudio } from '../hooks/useAudio'
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([])
@@ -11,6 +12,7 @@ export default function Tasks() {
   const [filter, setFilter] = useState('all') // all, todo, in_progress, done
   const [view, setView] = useState('list') // 'list' | 'board'
   const [refreshKey, setRefreshKey] = useState(0) // Forces Kanban refresh
+  const { playClick, playHover, playSuccess } = useAudio()
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -96,6 +98,9 @@ export default function Tasks() {
         .eq('id', taskId)
 
       if (error) throw error
+      
+      if (newStatus === 'done') playSuccess()
+      else playClick()
       
       // Optimistic update
       setTasks(tasks.map(t => 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ShieldCheck, Check, ArrowRight, Globe, CreditCard, Wallet } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useSubscription } from '../hooks/useSubscription'
+import { useAudio } from '../hooks/useAudio'
 import { toast } from 'sonner'
 
 const CURRENCIES = [
@@ -38,13 +39,14 @@ const PLANS = [
 
 export default function Upgrade() {
   const { tier, isPremium } = useSubscription()
+  const { playClick, playSuccess, playHover } = useAudio()
   const [loading, setLoading] = useState(false)
   const [currency, setCurrency] = useState(CURRENCIES[0])
 
   // Load BudPay Inline Script
   useEffect(() => {
     const script = document.createElement('script')
-    script.src = 'https://budpay.com/inline.js'
+    script.src = 'https://inlinepay.budpay.com/budpay-inline-custom.js'
     script.async = true
     document.body.appendChild(script)
     return () => {
@@ -53,6 +55,8 @@ export default function Upgrade() {
   }, [])
 
   const handleStripePayment = async (plan) => {
+    playClick()
+    playSuccess()
     setLoading(true)
     const price = (plan.usd_price * currency.rate).toFixed(2)
     toast.info(`Initializing Stripe Checkout for ${price} ${currency.code}...`)
@@ -61,11 +65,13 @@ export default function Upgrade() {
   }
 
   const handleBudPayPayment = async (plan) => {
-    if (!window.BudPayCheckout) {
+    if (typeof window.BudPayCheckout !== 'function') {
       toast.error("Billing System Offline. Please refresh.")
       return
     }
 
+    playClick()
+    playSuccess()
     setLoading(true)
     const price = (plan.usd_price * currency.rate).toFixed(2)
 
@@ -120,7 +126,8 @@ export default function Upgrade() {
                 {CURRENCIES.map(curr => (
                     <button
                         key={curr.code}
-                        onClick={() => setCurrency(curr)}
+                        onClick={() => { playClick(); setCurrency(curr) }}
+                        onMouseEnter={playHover}
                         className={`px-4 py-2 font-mono text-xs uppercase transition-all flex items-center gap-2 ${currency.code === curr.code ? 'bg-yellow-400 text-black font-black' : 'text-zinc-500 hover:text-white hover:bg-zinc-800'}`}
                     >
                         <span>{curr.flag}</span>

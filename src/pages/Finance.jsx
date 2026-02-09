@@ -4,11 +4,13 @@ import { motion } from 'framer-motion'
 import { Plus, DollarSign, TrendingUp, TrendingDown, Lock, Download } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { useAudio } from '../hooks/useAudio'
 
 export default function Finance() {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { playClick, playHover, playSuccess } = useAudio()
   
   // Form State
   const [amount, setAmount] = useState('')

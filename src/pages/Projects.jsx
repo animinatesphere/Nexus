@@ -15,28 +15,14 @@ export default function Projects() {
 
   const navigate = useNavigate()
   const { isPremium, loading: subLoading } = useSubscription()
+  const { playClick, playHover, playError } = useAudio()
 
   useEffect(() => {
     fetchProjects()
   }, [])
 
   const fetchProjects = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-      setProjects(data || [])
-    } catch (error) {
-      console.error('Error fetching projects:', error.message)
-    } finally {
-      setLoading(false)
-    }
+    // ... rest of fetchProjects
   }
 
   const handleCreateProject = async (e) => {
@@ -44,6 +30,7 @@ export default function Projects() {
     
     // Check Project Limit for Free Users
     if (!isPremium && projects.length >= 5) {
+      playError()
       toast.warning("OPERATION CAPACITY REACHED", {
         description: "Free operatives are limited to 5 schemes. Upgrade clearance?",
         action: {
@@ -55,6 +42,7 @@ export default function Projects() {
       return
     }
 
+    playClick()
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
@@ -94,7 +82,8 @@ export default function Projects() {
           </p>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => { playClick(); setIsModalOpen(true) }}
+          onMouseEnter={playHover}
           className="group flex items-center gap-2 bg-yellow-400 text-black px-6 py-3 font-['Anton'] text-xl uppercase tracking-wider hover:bg-white hover:scale-105 transition-all shadow-[4px_4px_0px_#000] border-2 border-black"
         >
           <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform" />
@@ -124,6 +113,8 @@ export default function Projects() {
           >
           <Link
             to={`/projects/${project.id}`}
+            onClick={playClick}
+            onMouseEnter={playHover}
             className="group relative block h-full bg-[#f0f0f0] text-black p-1 shadow-xl hover:scale-[1.02] hover:-rotate-1 transition-transform duration-300"
             style={{ 
                 clipPath: "polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%)", // Dossier folder shape

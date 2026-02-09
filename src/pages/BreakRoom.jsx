@@ -4,9 +4,11 @@ import { Chessboard } from 'react-chessboard'
 import { Chess } from 'chess.js'
 import { Gamepad2, ArrowLeft, Trophy, Play, RotateCcw, Info } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAudio } from '../hooks/useAudio'
 
 export default function BreakRoom() {
   const [selectedGame, setSelectedGame] = useState(null) // 'chess' | 'whot' | null
+  const { playClick, playHover } = useAudio()
 
   return (
     <div className="space-y-8 h-full">
@@ -14,7 +16,7 @@ export default function BreakRoom() {
         <div className="flex items-center gap-4">
           {selectedGame && (
             <button 
-              onClick={() => setSelectedGame(null)}
+              onClick={() => { playClick(); setSelectedGame(null) }}
               className="group flex items-center justify-center h-12 w-12 bg-yellow-400 border-2 border-black hover:bg-white transition-colors"
             >
               <ArrowLeft className="h-6 w-6 text-black" />
@@ -48,14 +50,16 @@ export default function BreakRoom() {
               description="Tactical Simulation. Plan your moves against the Syndicate AI."
               icon={<div className="text-5xl grayscale">♟️</div>}
               color="bg-zinc-900"
-              onClick={() => setSelectedGame('chess')}
+              onClick={() => { playClick(); setSelectedGame('chess') }}
+              onMouseEnter={playHover}
             />
             <GameCard 
               title="Whot!" 
               description="The classic African card game. Match shapes, numbers, and dominate."
               icon={<div className="text-5xl grayscale">🎴</div>}
               color="bg-black"
-              onClick={() => setSelectedGame('whot')}
+              onClick={() => { playClick(); setSelectedGame('whot') }}
+              onMouseEnter={playHover}
             />
           </motion.div>
         ) : selectedGame === 'chess' ? (
@@ -68,10 +72,11 @@ export default function BreakRoom() {
   )
 }
 
-function GameCard({ title, description, icon, color, onClick }) {
+function GameCard({ title, description, icon, color, onClick, onMouseEnter }) {
   return (
     <motion.button 
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`group relative overflow-hidden border-2 border-zinc-700 ${color} text-left shadow-[8px_8px_0px_#000] hover:border-yellow-400 transition-all`}
